@@ -386,7 +386,7 @@ def getCranialBaseVectorsTest(anchors, input_image, mask_image, base_anchor_coun
     base_anchors = getCranialBaseAnchors(mask_image, base_anchor_count)
     # get landmarks to correct cranial base vector directions
     reader = vtk.vtkXMLPolyDataReader()
-    reader.SetFileName('InitialLandmarks.vtp')
+    reader.SetFileName('data\InitialLandmarks.vtp')
     reader.Update()
     landmarkPolyData = reader.GetOutput()
     landmarks = np.array(landmarkPolyData.GetPoints().GetData())
@@ -648,7 +648,7 @@ def transformShape(
     tuple: transformed points, derivatives of the transformation, centers, and derivative centers
     """
     def velocity(a, b, c, t):
-        return(np.exp(a) / (np.exp(b)*t + np.exp(c)*t**2 + 1))
+        return(a / (b*t + c*t**2 + 1))
 
     previous_transformed_points = transformed_points
 
@@ -717,3 +717,31 @@ def predictShapeDevelopment(X, increments, anchors, centers, weights, scale_para
         transformed_points_structure[i] = transformed_points
 
     return transformed_points_structure
+
+def shutDownSuturalGrowth(scale_parameters, prediction_type):
+    """
+    Shut down growth at specific suture if not predicting normal growth
+
+    Parameters
+    ----------
+    scale_parameters: np.array
+        The scale parameters for sutural growth
+    prediction_type: string
+        take one of the following value: 'normal', 'metopic', 'sagittal', 'left coroanl' or 'right coronal'.
+
+    Returns
+    -------
+    np.array:
+        The scale parameters with specific sutural growth shutted down  
+    """
+
+    if prediction_type == 'metopic':
+        scale_parameters[:9] = 0
+    elif prediction_type == 'sagittal':
+        scale_parameters[27:36] = 0
+    elif prediction_type == 'right coronal':
+        scale_parameters[9:18] = 0
+    elif prediction_type == 'left coronal':
+        scale_parameters[18:27] = 0
+    
+    return(scale_parameters)
