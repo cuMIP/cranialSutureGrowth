@@ -66,7 +66,7 @@ _, vectors, normals = Tools.getIJKVectors(anchors, input_image, sutures, anchors
 
 base_anchors = Tools.getCranialBaseAnchors(mask_image, base_anchor_count)
 
-base_anchors, base_normals, base_parallel = Tools.getCranialBaseVectorsTest(anchors, input_image, mask_image, base_anchor_count, anchors_per_suture)
+base_anchors, base_normals, base_parallel = Tools.getCranialBaseVectorsAndParallel(anchors, input_image, mask_image, base_anchor_count, anchors_per_suture)
 
 anchors = np.concatenate((np.concatenate((anchors, base_anchors), axis=0), base_anchors), axis = 0)
 vectors = np.concatenate((np.concatenate((vectors, base_parallel), axis=0), base_normals), axis = 0)
@@ -101,7 +101,6 @@ for i in range(transformed_points_structure.shape[0]):
     writer.SetFileName("shapeAtAge{:.2f}Years.vtp".format(i/increments * 10))
     writer.SetInputData(original_mesh)
     writer.Update()
-
 ```
 
 ### The workflow
