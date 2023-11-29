@@ -701,6 +701,40 @@ def transformShape(
     return transformed_points, centers
 
 def predictShapeDevelopment(X, increments, anchors, centers, weights, scale_parameters, vectors, base_anchor_count):
+    
+    """predict shape development based on transformShape
+
+    Parameters
+    ----------
+    X: np.array
+        intial shape at birth
+
+    increments: int
+        number of time discretization
+
+    anchors: np.array
+        array contains anchor locations
+
+    centers: np.array
+        coordinates of the anchors
+
+    weights: np.array
+        regional weights for each of the anchors
+
+    scale_parameters: np.array
+        suturte growth velocities for each of the anchors
+
+    vectors: np.array
+        directions of growth vectors
+
+    base_anchor_count: int
+        number of anchors at the base of the calvarium
+
+    Returns
+    -------
+    np.array: transformed coordinates at each discretized time points.
+    """
+    
     transformed_points = X
 
     delta = 1.0 / (increments - 1)

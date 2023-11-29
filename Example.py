@@ -6,10 +6,10 @@ import vtk
 import matplotlib.pyplot as plt
 import Tools
 
-sample = 6 # subsampling factor
 anchors_per_suture = 3
 base_anchor_count = 12
-prediction_type = 'normal'
+## prediction_type takes one of the following value: 'normal', 'metopic', 'sagittal', 'left coroanl' or 'right coronal'.
+prediction_type = 'normal' 
 
 ### load data
 # average segmentation, intital image and mask used for transformation
@@ -18,9 +18,10 @@ age0 = sitk.ReadImage('data/InitialShapeImage.mha')
 mask = sitk.ReadImage('data/SphericalMaskImage.mha')
 
 # put images in numpy data structure and sample pizels
-mask_image = sitk.GetArrayFromImage(mask)[::sample, ::sample]
-input_image = sitk.GetArrayFromImage(age0)[::sample, ::sample]
-bone_image = sitk.GetArrayFromImage(bones)[::sample, ::sample]
+sample = 6 # subsampling factor
+mask_image = sitk.GetArrayFromImage(mask)[::6, ::6]
+input_image = sitk.GetArrayFromImage(age0)[::6, ::6]
+bone_image = sitk.GetArrayFromImage(bones)[::6, ::6]
 
 # get indices of mask to limit aligned image
 mask_indices = np.argwhere(mask_image == 0)
@@ -50,9 +51,9 @@ weights = np.load('data/weights.npy')
 #### predict growth
 scale_parameters = np.load('data/sutureGrowthModelExponentiated.npy')
 scale_parameters = Tools.shutDownSuturalGrowth(scale_parameters, prediction_type)
-
+increments = int(3625.25/5)
 transformed_points_structure = Tools.predictShapeDevelopment(
-    input_image, int(3625.25/5), anchors, centers, weights, scale_parameters, vectors, base_anchor_count
+    input_image, increments, anchors, centers, weights, scale_parameters, vectors, base_anchor_count
 )
 
 ## visualize weights
@@ -71,6 +72,6 @@ for i in range(transformed_points_structure.shape[0]):
         image, sampled_mask, intensityImageDict={}, subsamplingFactor=2 / sample, verbose=False
     )
     writer = vtk.vtkXMLPolyDataWriter()
-    writer.SetFileName("shape{:03d}.vtp".format(i))
+    writer.SetFileName("shapeAtAge{:.2f}Years.vtp".format(i/increments * 10))
     writer.SetInputData(original_mesh)
     writer.Update()
