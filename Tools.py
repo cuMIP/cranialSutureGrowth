@@ -364,7 +364,7 @@ def getCranialBaseVectors(landmarks, anchors, input_image):
 
     return vectors
 
-def getCranialBaseVectorsTest(anchors, input_image, mask_image, base_anchor_count, anchors_per_suture):
+def getCranialBaseVectorsAndParallel(anchors, input_image, mask_image, base_anchor_count, anchors_per_suture):
     """calculate the vectors normal to the cranial surface at the cranial base
 
     Parameters

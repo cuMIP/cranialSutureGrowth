@@ -1,18 +1,15 @@
 import numpy as np
-import os
-import pandas as pd
 import SimpleITK as sitk
 import vtk
-import matplotlib.pyplot as plt
 import Tools
 
-anchors_per_suture = 3
-base_anchor_count = 12
 ## prediction_type takes one of the following value: 'normal', 'metopic', 'sagittal', 'left coroanl' or 'right coronal'.
 prediction_type = 'normal' 
 
 ### load data
 # average segmentation, intital image and mask used for transformation
+anchors_per_suture = 3
+base_anchor_count = 12
 bones = sitk.ReadImage('data/averageBoneSegmentationSphericalImage.mha')
 age0 = sitk.ReadImage('data/InitialShapeImage.mha')
 mask = sitk.ReadImage('data/SphericalMaskImage.mha')
@@ -40,7 +37,7 @@ _, vectors, normals = Tools.getIJKVectors(anchors, input_image, sutures, anchors
 
 base_anchors = Tools.getCranialBaseAnchors(mask_image, base_anchor_count)
 
-base_anchors, base_normals, base_parallel = Tools.getCranialBaseVectorsTest(anchors, input_image, mask_image, base_anchor_count, anchors_per_suture)
+base_anchors, base_normals, base_parallel = Tools.getCranialBaseVectorsAndParallel(anchors, input_image, mask_image, base_anchor_count, anchors_per_suture)
 
 anchors = np.concatenate((np.concatenate((anchors, base_anchors), axis=0), base_anchors), axis = 0)
 vectors = np.concatenate((np.concatenate((vectors, base_parallel), axis=0), base_normals), axis = 0)
