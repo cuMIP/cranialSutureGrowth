@@ -1,32 +1,3 @@
-# Cranial Suture Growth Model
-This is a repository for the [Data-driven cranial suture growth model enables predicting phenotypes of craniosynostosis](https://www.nature.com/articles/s41598-023-47622-7).
-
-The data folder contains the trained suture growth parameters (``sutureGrowthModel``) and regional weights at each anchor (``weights``) described in the manuscript. The folder also contains other necessary files to generate grwoth prediction synthesis, including the average bone segmenration maps and mask image(``averageBoneSegmentationSphericalImage`` and ``SphericalMaskImage``), and the average shape image and anatomical landmarks at birth (``InitialShapeImage`` and ``InitialLandmarks``).
-
-This repository also provides example scripts to generate synthetic normative cranial bone surface meshes, and to simulate single suture craniosynostosis. 
-
-## Dependencies:
-- [Python](python.org)
-- [NumPy](https://numpy.org/install/)
-- [SimpleITK](https://simpleitk.org/)
-- [VTK](https://pypi.org/project/vtk/)
-- [scikit-learn](https://scikit-learn.org/stable/)
-
-    *Once Python is installed, each of these packages can be downloaded using [Python pip](https://pip.pypa.io/en/stable/installation/)*
-
-
-## Using the code
-
-### Quick summary
-
-**Input**: prediction_type that indicates which phenotype to simulate: takes one of the following value: 'normal', 'metopic' for metopic craniosynostosis, 'sagittal' for sagittal craniosynostosis, 'left coroanl' for left coronal craniosynostosis or 'right coronal' for right coronal craniosynostosis.
-
-**Output**: VTK PolyData for the growth development from birth to 10 years of age, discretized in 5 days intervals.
-
-
-### Code example
-
-```python
 import numpy as np
 import SimpleITK as sitk
 import vtk
@@ -101,16 +72,3 @@ for i in range(transformed_points_structure.shape[0]):
     writer.SetFileName("shapeAtAge{:.3f}Years.vtp".format(i/increments * 10))
     writer.SetInputData(original_mesh)
     writer.Update()
-
-```
-
-### The workflow
-
-- The **Tools.getAnchors** function calculates the anchors a at each suture, based on the average bone segmentation map.
-- The **Tools.getIJKVectors** function calculates the suture growth vectors u_a at the sutures that is tangential to the cranial surface and perpendicular to the sutures.
-- The **Tools.getCranialBaseAnchors** function calculates the anchors a at the base of the cranium.
-- The **Tools.getCranialBaseVectorsAndParallel** function calculates the growth vectors u_a y_a at the cranial base.
-- The **Tools.shutDownSuturalGrowth** function shut down the growth rate at specific sutures based on the phenotype to simulate.
-- The **Tools.predictShapeDevelopment** function simulates the growth from birth to 10 years of age.
-
-If you have any questions, please email Jiawei Liu at jiawei.liu@cuanschutz.edu
