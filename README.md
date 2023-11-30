@@ -1,5 +1,5 @@
 # Cranial Suture Growth Model
-This is a repository for the [Data-driven cranial suture growth model enables predicting phenotypes of craniosynostosis](https://github.com/cuMIP/cranialSutureGrowth).
+This is a repository for the [Data-driven cranial suture growth model enables predicting phenotypes of craniosynostosis](https://www.nature.com/articles/s41598-023-47622-7).
 
 The data folder contains the trained suture growth parameters (``sutureGrowthModel``) and regional weights at each anchor (``weights``) described in the manuscript. The folder also contains other necessary files to generate grwoth prediction synthesis, including the average bone segmenration maps and mask image(``averageBoneSegmentationSphericalImage`` and ``SphericalMaskImage``), and the average shape image and anatomical landmarks at birth (``InitialShapeImage`` and ``InitialLandmarks``).
 
