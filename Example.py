@@ -46,7 +46,7 @@ centers = input_image[anchors[:, 0], anchors[:, 1], :]
 weights = np.load('data/weights.npy')
 
 #### predict growth
-scale_parameters = np.load('data/sutureGrowthModelExponentiated.npy')
+scale_parameters = np.load('data/sutureGrowthModel.npy')
 scale_parameters = Tools.shutDownSuturalGrowth(scale_parameters, prediction_type)
 increments = int(3625.25/5)
 transformed_points_structure = Tools.predictShapeDevelopment(
@@ -60,7 +60,7 @@ sampled_mask.SetOrigin((-1., -1.))
 sampled_mask.SetSpacing((sample * age0.GetSpacing()[0], sample * age0.GetSpacing()[0]))
 
 for i in range(transformed_points_structure.shape[0]):
-    print(i)
+    print('Generating shape {:03d}/{:03d}'.format(i, transformed_points_structure.shape[0]), end = '\r')
     image = sitk.GetImageFromArray(transformed_points_structure[i], isVector=True)
     image.SetOrigin((-1., -1.))
     image.SetSpacing((sample * age0.GetSpacing()[0], sample * age0.GetSpacing()[0]))
@@ -69,6 +69,6 @@ for i in range(transformed_points_structure.shape[0]):
         image, sampled_mask, intensityImageDict={}, subsamplingFactor=2 / sample, verbose=False
     )
     writer = vtk.vtkXMLPolyDataWriter()
-    writer.SetFileName("shapeAtAge{:.2f}Years.vtp".format(i/increments * 10))
+    writer.SetFileName("shapeAtAge{:.3f}Years.vtp".format(i/increments * 10))
     writer.SetInputData(original_mesh)
     writer.Update()

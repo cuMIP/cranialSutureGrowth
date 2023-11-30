@@ -769,6 +769,8 @@ def shutDownSuturalGrowth(scale_parameters, prediction_type):
         The scale parameters with specific sutural growth shutted down  
     """
 
+
+
     if prediction_type == 'metopic':
         scale_parameters[:9] = 0
     elif prediction_type == 'sagittal':
@@ -777,5 +779,7 @@ def shutDownSuturalGrowth(scale_parameters, prediction_type):
         scale_parameters[9:18] = 0
     elif prediction_type == 'left coronal':
         scale_parameters[18:27] = 0
+    elif prediction_type != 'normal':
+        raise Exception("Invalid phenotype to simulate.")
     
     return(scale_parameters)
